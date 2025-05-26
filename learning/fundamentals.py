@@ -17,4 +17,13 @@ def main():
     screen.blit(background, (0,0))
     pygame.display.flip()
 
+    # event loop - necessary to keep window open
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return
+
+        screen.blit(background, (0,0))
+        pygame.display.flip()
+
 if __name__ == '__main__': main()
