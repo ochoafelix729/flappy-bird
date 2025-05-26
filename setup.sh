@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-pip3 install pygame
+brew install pygame
 
 echo "Setup complete! Your system is ready."
