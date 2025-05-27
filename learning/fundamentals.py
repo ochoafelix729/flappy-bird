@@ -22,7 +22,7 @@ def main():
     pygame.display.set_caption('Basic Pygame program')
 
     # load background image
-    background = pygame.image.load('background-day.png').convert()
+    background = pygame.image.load('sprites/background-day.png').convert()
     background = pygame.transform.scale(background, (ww,wh))
 
 
