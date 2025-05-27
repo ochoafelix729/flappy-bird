@@ -23,6 +23,7 @@ class Game():
         # load background image
         background = pygame.image.load('sprites/background-day.png').convert()
         background = pygame.transform.scale(window, (self.window_w, self.window_h))
+        print('loaded background')
 
         # event loop
         run = True
