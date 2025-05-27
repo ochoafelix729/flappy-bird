@@ -35,4 +35,4 @@ class Game():
             
             window.blit(background, (0,0))
 
-game = Game()
+game = Game(1000,1000)
