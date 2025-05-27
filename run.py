@@ -1,6 +1,5 @@
 import pygame
 from pygame import *
-import sys
 
 class Bird():
     def __init__(self, x, y):
@@ -17,12 +16,12 @@ class Game():
 
         # create window
         pygame.init()
-        window = pygame.display.set_mode((self.window_w, self.window_h))
+        self.window = pygame.display.set_mode((self.window_w, self.window_h))
         pygame.display.set_caption('Flappy Bird')
 
         # load background image
-        background = pygame.image.load('sprites/background-day.png').convert()
-        background = pygame.transform.scale(window, (self.window_w, self.window_h))
+        self.background = pygame.image.load('sprites/background-day.png').convert()
+        self.background = pygame.transform.scale(self.background, (self.window_w, self.window_h))
         print('loaded background')
 
         # event loop
@@ -34,7 +33,7 @@ class Game():
                 if event.type == pygame.QUIT:
                     run = False
             
-            window.blit(background, (0,0))
+            self.window.blit(self.background, (0,0))
             pygame.display.update()
 
 game = Game(1000,1000)
