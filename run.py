@@ -3,7 +3,7 @@ from pygame import *
 
 class Bird():
     def __init__(self, x, y):
-        self.image = pygame.image.load('sprites/blue-bird-upflap')
+        self.image = pygame.image.load('sprites/bluebird-upflap.png')
         self.width = image.get_width()
         self.height = image.get_height()
         self.x = x
