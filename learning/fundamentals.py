@@ -8,7 +8,7 @@ def main():
     y = 200
     w = 30
     h = 30
-    velocity = 5
+    velocity = 10
 
     # initialize screen
     pygame.init()
@@ -38,10 +38,10 @@ def main():
             x += velocity
 
         if keys[pygame.K_UP]:
-            x -= velocity
+            y -= velocity
 
         if keys[pygame.K_DOWN]:
-            x += velocity
+            y += velocity
         
         screen.fill((0,0,0))
 
