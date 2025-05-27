@@ -4,6 +4,12 @@ import os
 
 def main():
 
+    x = 200
+    y = 200
+    w = 30
+    h = 30
+    velocity = 5
+
     # initialize screen
     pygame.init()
     screen = pygame.display.set_mode((1000,1000))
@@ -12,7 +18,7 @@ def main():
     # fill background
     background = pygame.Surface(screen.get_size())
     background = background.convert()
-    background.fill((250,250,250))
+    background.fill((0,0,0))
 
     # event loop - necessary to keep window open
     run = True
@@ -23,7 +29,23 @@ def main():
             if event.type == QUIT:
                 run = False
 
-        pygame.draw.rect(screen, (255,0,0), (200,200,30,30))
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT]:
+            x -= velocity
+
+        if keys[pygame.K_RIGHT]:
+            x += velocity
+
+        if keys[pygame.K_UP]:
+            x -= velocity
+
+        if keys[pygame.K_DOWN]:
+            x += velocity
+        
+        screen.fill((0,0,0))
+
+        pygame.draw.rect(screen, (255,0,0), (x,y,w,h))
         pygame.display.update()
 
 
