@@ -23,7 +23,7 @@ def main():
     # event loop - necessary to keep window open
     run = True
     while run:
-        pygame.time.delay(100)
+        pygame.time.delay(50)
 
         for event in pygame.event.get():
             if event.type == QUIT:
