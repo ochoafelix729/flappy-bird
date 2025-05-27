@@ -1,8 +1,10 @@
 import pygame
 from pygame.locals import *
-import os
+import sys
 
 def main():
+
+    # sprite attributes
 
     x = 200
     y = 200
@@ -10,15 +12,19 @@ def main():
     h = 30
     velocity = 10
 
+    # window size
+    ww = 1000
+    wh = 1000
+
     # initialize screen
     pygame.init()
-    screen = pygame.display.set_mode((1000,1000))
+    screen = pygame.display.set_mode((ww,wh))
     pygame.display.set_caption('Basic Pygame program')
 
-    # fill background
-    background = pygame.Surface(screen.get_size())
-    background = background.convert()
-    background.fill((0,0,0))
+    # load background image
+    background = pygame.image.load('background-day.png').convert()
+    background = pygame.transform.scale(background, (ww,wh))
+
 
     # event loop - necessary to keep window open
     run = True
@@ -43,7 +49,7 @@ def main():
         if keys[pygame.K_DOWN]:
             y += velocity
         
-        screen.fill((0,0,0))
+        screen.blit(background, (0,0))
 
         pygame.draw.rect(screen, (255,0,0), (x,y,w,h))
         pygame.display.update()
