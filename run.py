@@ -6,6 +6,8 @@ class Bird():
         self.image = pygame.image.load('sprites/blue-bird-upflap')
         self.width = image.get_width()
         self.height = image.get_height()
+        self.x = x
+        self.y = y
 
 
 class Game():
@@ -13,6 +15,8 @@ class Game():
 
         self.window_w = w
         self.window_h = h
+
+        self.bird = Bird(300,500)
 
         # create window
         pygame.init()
@@ -22,7 +26,6 @@ class Game():
         # load background image
         self.background = pygame.image.load('sprites/background-day.png').convert()
         self.background = pygame.transform.scale(self.background, (self.window_w, self.window_h))
-        print('loaded background')
 
         # event loop
         run = True
@@ -32,7 +35,9 @@ class Game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-            
+
+            # blit all visible elements
+            self.window.blit(self.bird.image, (self.bird.x, self.bird.y))
             self.window.blit(self.background, (0,0))
             pygame.display.update()
 
