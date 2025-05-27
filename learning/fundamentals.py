@@ -23,7 +23,7 @@ def main():
             if event.type == QUIT:
                 run = False
 
-        pygame.draw.rect(screen, (255,0,0) (30,30,30,30))
+        pygame.draw.rect(screen, (255,0,0), (30,30,30,30))
         pygame.display.update()
 
 
