@@ -34,5 +34,6 @@ class Game():
                     run = False
             
             window.blit(background, (0,0))
+            pygame.display.update()
 
 game = Game(1000,1000)
