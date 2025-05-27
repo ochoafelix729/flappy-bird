@@ -38,6 +38,7 @@ class Game():
 
             # blit all visible elements
             self.window.blit(self.bird.image, (self.bird.x, self.bird.y))
+            print('bird drawn')
             self.window.blit(self.background, (0,0))
             pygame.display.update()
 
