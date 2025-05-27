@@ -6,7 +6,7 @@ def main():
 
     # initialize screen
     pygame.init()
-    screen = pygame.display.set_mode((150,50))
+    screen = pygame.display.set_mode((1000,1000))
     pygame.display.set_caption('Basic Pygame program')
 
     # fill background
@@ -23,7 +23,7 @@ def main():
             if event.type == QUIT:
                 run = False
 
-        pygame.draw.rect(screen, (255,0,0), (30,30,30,30))
+        pygame.draw.rect(screen, (255,0,0), (200,200,30,30))
         pygame.display.update()
 
 
