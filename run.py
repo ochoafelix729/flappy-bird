@@ -18,14 +18,20 @@ class Bird():
         self.x = x
         self.y = y
         self.velocity = 0
-        self.clock = pygame.time.Clock()
+        self.jump_time = 0
+        # self.do_follow_up = False
         self.falling = True
-        self.jumpforce = 180
+        self.jumpforce = -8
 
-    def jump():
-        pass
+    def udpateFlap(self):
+        if (pygame.time.get_ticks() - self.jump_time) < 500:
+            self.image = pygame.image.load('sprites/bluebird-downflap.png')
 
-        # need to update sprite for jump animation later
+        elif self.velocity < 0:
+            self.image = pygame.image.load('sprites/bluebird-midflap.png')
+        
+        elif self.velocity > 0:
+            self.image = pygame.image.load('sprites/bluebird-upflap.png')
         
 
 
@@ -34,7 +40,7 @@ class Game():
 
         self.window_w = w
         self.window_h = h
-        self.gravity = 1.1
+        self.gravity = 0.5
         self.curr_screen = 'intro'
         
         # create window
@@ -126,7 +132,8 @@ class Game():
     def updateGamePlay(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            self.bird.velocity = -12
+            self.bird.velocity = self.bird.jumpforce
+            self.bird.jump_time = pygame.time.get_ticks()
 
         if self.bird.y > (self.window_h - self.bird.height):
                 self.clearScreen()
@@ -135,6 +142,7 @@ class Game():
         # gravity
         self.bird.velocity += self.gravity
         self.bird.y += self.bird.velocity
+        self.bird.udpateFlap()
 
 
     def drawGameOver(self):
