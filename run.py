@@ -20,6 +20,7 @@ class Bird():
         self.clock = pygame.time.Clock()
         self.falling = True
         self.jumpforce = 100
+        self.sidespeed = 15
 
 
     def jump(self):
@@ -47,8 +48,10 @@ class Game():
 
         # for gameplay screen
         self.bird = Bird()
-        self.bird.x = 497 - (self.bird.width // 2)
-        self.bird.y = 547 - (self.bird.height // 2)
+        self.bird.start_x = 497 - (self.bird.width // 2)
+        self.bird.start_y = 547 - (self.bird.height // 2)
+        self.bird.x = self.bird.start_x
+        self.bird.y = self.bird.start_y
 
         # for gameover screen
         self.active = False
@@ -96,8 +99,13 @@ class Game():
         self.background = pygame.transform.scale(self.background, (self.window_w, self.window_h))
         self.window.blit(self.background, (0,0))
 
+    def restartGame(self):
+        self.bird.x = self.bird.start_x
+        self.bird.y = self.bird.start_y
+
 
     def drawIntro(self):
+        self.clearScreen()
         intro_screen = Sprite('sprites/message.png')
         center_x = (self.window_w - intro_screen.width) // 2
         center_y = (self.window_h - intro_screen.height) // 2
@@ -118,6 +126,12 @@ class Game():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
             self.bird.jump()
+        
+        elif keys[pygame.K_LEFT]:
+            self.bird.x -= self.bird.sidespeed
+        
+        elif keys[pygame.K_RIGHT]:
+            self.bird.x += self.bird.sidespeed
 
         if self.bird.y > (self.window_h - self.bird.height):
                 self.clearScreen()
@@ -128,6 +142,7 @@ class Game():
 
 
     def drawGameOver(self):
+        self.clearScreen()
     
         # game over screen
         game_over_screen = Sprite('sprites/gameover.png')
@@ -158,9 +173,8 @@ class Game():
             self.active = True
 
         if hovered and self.mouse_click[0]:
-            print('button clicked')
-
-            # will do later
+            self.curr_screen = 'intro'
+            self.restartGame()
 
 
 # start game
