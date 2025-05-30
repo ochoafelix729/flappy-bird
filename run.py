@@ -17,14 +17,16 @@ class Bird():
         self.height = self.image.get_height()
         self.x = x
         self.y = y
+        self.velocity = 0
         self.clock = pygame.time.Clock()
         self.falling = True
-        self.jumpforce = 100
-        self.sidespeed = 15
+        self.jumpforce = 180
 
+    def jump():
+        pass
 
-    def jump(self):
-        self.y -= self.jumpforce
+        # need to update sprite for jump animation later
+        
 
 
 class Game():
@@ -32,10 +34,9 @@ class Game():
 
         self.window_w = w
         self.window_h = h
-        self.gravity = 20
+        self.gravity = 1.1
         self.curr_screen = 'intro'
         
-
         # create window
         pygame.init()
         self.window = pygame.display.set_mode((self.window_w, self.window_h))
@@ -125,20 +126,15 @@ class Game():
     def updateGamePlay(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            self.bird.jump()
-        
-        elif keys[pygame.K_LEFT]:
-            self.bird.x -= self.bird.sidespeed
-        
-        elif keys[pygame.K_RIGHT]:
-            self.bird.x += self.bird.sidespeed
+            self.bird.velocity = -12
 
         if self.bird.y > (self.window_h - self.bird.height):
                 self.clearScreen()
                 self.curr_screen = 'gameover'
         
-        # gravity ---- might make a function later
-        self.bird.y += self.gravity
+        # gravity
+        self.bird.velocity += self.gravity
+        self.bird.y += self.bird.velocity
 
 
     def drawGameOver(self):
