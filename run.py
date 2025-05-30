@@ -41,6 +41,7 @@ class Game():
         self.window_w = w
         self.window_h = h
         self.gravity = 0.5
+        self.gravity_on = True
         self.curr_screen = 'intro'
         
         # create window
@@ -55,8 +56,10 @@ class Game():
 
         # for gameplay screen
         self.bird = Bird()
-        self.bird.start_x = 497 - (self.bird.width // 2)
-        self.bird.start_y = 547 - (self.bird.height // 2)
+        self.base = None
+        self.base_height = 688
+        self.bird.start_x = 500 - (self.bird.width // 2)
+        self.bird.start_y = 445 - (self.bird.height // 2)
         self.bird.x = self.bird.start_x
         self.bird.y = self.bird.start_y
 
@@ -73,6 +76,8 @@ class Game():
         self.run = True
         while self.run:
             pygame.time.delay(50)
+
+            print(self.gravity_on)
 
             self.mouse_pos = pygame.mouse.get_pos()
             self.mouse_click = pygame.mouse.get_pressed()
@@ -106,6 +111,7 @@ class Game():
         self.background = pygame.transform.scale(self.background, (self.window_w, self.window_h))
         self.window.blit(self.background, (0,0))
 
+
     def restartGame(self):
         self.bird.x = self.bird.start_x
         self.bird.y = self.bird.start_y
@@ -120,7 +126,7 @@ class Game():
 
     
     def updateIntro(self):
-        if abs(self.mouse_pos[0] - 496) <= 20 and abs(self.mouse_pos[1] - 604) <= 20 and self.mouse_click[0]:
+        if abs(self.mouse_pos[0] - 501) <= 20 and abs(self.mouse_pos[1] - 505) <= 20 and self.mouse_click[0]:
             self.curr_screen = 'gameplay'
 
 
@@ -128,21 +134,31 @@ class Game():
         self.clearScreen()
         self.window.blit(self.bird.image, (self.bird.x, self.bird.y))
 
+        # bottom base
+        left_base = Sprite('sprites/base.png') # just for looks
+        self.base = Sprite('sprites/base.png')
+        right_base = Sprite('sprites/base.png') # just for looks
+
+        self.window.blit(left_base.image, (0,self.base_height))
+        self.window.blit(self.base.image, (336,self.base_height))
+        self.window.blit(right_base.image, (672,self.base_height))
+
 
     def updateGamePlay(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
+            self.gravity_on = True
             self.bird.velocity = self.bird.jumpforce
             self.bird.jump_time = pygame.time.get_ticks()
 
-        if self.bird.y > (self.window_h - self.bird.height):
-                self.clearScreen()
-                self.curr_screen = 'gameover'
+        if (pygame.time.get_ticks() - self.bird.jump_time) > 50 and abs(self.bird.y - (self.base_height - self.bird.height)) <= 5:
+            self.gravity_on = False
         
         # gravity
-        self.bird.velocity += self.gravity
-        self.bird.y += self.bird.velocity
-        self.bird.udpateFlap()
+        if self.gravity_on:
+            self.bird.velocity += self.gravity
+            self.bird.y += self.bird.velocity
+            self.bird.udpateFlap()
 
 
     def drawGameOver(self):
@@ -155,13 +171,12 @@ class Game():
         self.window.blit(game_over_screen.image, (center_x, center_y))
 
         # play again button
-        
         text = 'Play Again?'
         text_color = (255,255,255)
         button_x = center_x + (game_over_screen.width // 4)
         button_y = center_y + 80
-        self.button_rect = pygame.Rect(button_x, button_y, 100, 40)
 
+        self.button_rect = pygame.Rect(button_x, button_y, 100, 40)
         self.color = self.hover_color if self.active else self.button_color
         pygame.draw.rect(self.window, self.color, self.button_rect, border_radius=5)
 
@@ -182,4 +197,4 @@ class Game():
 
 
 # start game
-game = Game(1000,1000)
+game = Game(1008,800)
