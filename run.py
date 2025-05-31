@@ -1,6 +1,6 @@
 import pygame
 from pygame import *
-import sys
+import random
 
 class Sprite():
     def __init__(self, path):
@@ -11,17 +11,18 @@ class Sprite():
 
 
 class Bird():
-    def __init__(self, x=500, y=500):
+    def __init__(self):
         self.image = pygame.image.load('sprites/bluebird-upflap.png')
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        self.x = x
-        self.y = y
+        self.x = 0
+        self.y = 0
+        self.start_x = None
+        self.start_y = None
         self.velocity = 0
         self.jump_time = 0
-        # self.do_follow_up = False
         self.falling = True
-        self.jumpforce = -8
+        self.jumpforce = -12 # constant
 
     def udpateFlap(self):
         if (pygame.time.get_ticks() - self.jump_time) < 500:
@@ -34,13 +35,20 @@ class Bird():
             self.image = pygame.image.load('sprites/bluebird-upflap.png')
         
 
+class Pipe():
+    def __init__(self, x):
+        self.image = pygame.image.load('sprites/pipe-green.png')
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+        self.x = x
+        self.y = 0
 
 class Game():
     def __init__(self, w, h):
 
         self.window_w = w
         self.window_h = h
-        self.gravity = 0.5
+        self.gravity = 0.9 # constant
         self.gravity_on = True
         self.curr_screen = 'intro'
         
@@ -57,11 +65,13 @@ class Game():
         # for gameplay screen
         self.bird = Bird()
         self.base = None
-        self.base_height = 688
-        self.bird.start_x = 500 - (self.bird.width // 2)
-        self.bird.start_y = 445 - (self.bird.height // 2)
+        self.base_height = 688 # constant
+        self.bird.start_x = 500 - (self.bird.width // 2) # constant
+        self.bird.start_y = 445 - (self.bird.height // 2) # constant
         self.bird.x = self.bird.start_x
         self.bird.y = self.bird.start_y
+        self.last_pipe_time = 0
+        self.pipes = []
 
         # for gameover screen
         self.active = False
@@ -77,7 +87,9 @@ class Game():
         while self.run:
             pygame.time.delay(50)
 
-            print(self.gravity_on)
+            if pygame.time.get_ticks() - self.last_pipe_time > 1500:
+                self.generatePipes()
+                self.last_pipe_time = pygame.time.get_ticks()
 
             self.mouse_pos = pygame.mouse.get_pos()
             self.mouse_click = pygame.mouse.get_pressed()
@@ -116,6 +128,26 @@ class Game():
         self.bird.x = self.bird.start_x
         self.bird.y = self.bird.start_y
 
+    def generatePipes(self):
+        min = 80 # constant - this will increase as game goes on
+        max = 300 # constant
+        pipe_x = self.window_w
+
+        # create bottom pipe
+        bottom_pipe = Pipe(pipe_x)
+        bottom_pipe.image = pygame.image.load('sprites/pipe-green.png').convert_alpha()
+        bottom_pipe.x = pipe_x
+        bottom_pipe.y = random.randint(self.base_height - max, self.base_height - min)
+
+        # create top pipe
+        top_pipe = Pipe(pipe_x)
+        top_pipe.image = pygame.image.load('sprites/pipe-green-down.png').convert_alpha()
+        top_pipe.x = pipe_x
+        top_pipe.y = random.randint(min - top_pipe.image.get_height(), max - top_pipe.image.get_height())
+
+        self.pipes.append(top_pipe)
+        self.pipes.append(bottom_pipe)
+
 
     def drawIntro(self):
         self.clearScreen()
@@ -132,16 +164,23 @@ class Game():
 
     def drawGamePlay(self):
         self.clearScreen()
+
+        # pipes
+        for pipe in self.pipes:
+            self.window.blit(pipe.image, (pipe.x, pipe.y))
+        
+        # bird
         self.window.blit(self.bird.image, (self.bird.x, self.bird.y))
 
-        # bottom base
+        # base
         left_base = Sprite('sprites/base.png') # just for looks
         self.base = Sprite('sprites/base.png')
         right_base = Sprite('sprites/base.png') # just for looks
-
         self.window.blit(left_base.image, (0,self.base_height))
         self.window.blit(self.base.image, (336,self.base_height))
         self.window.blit(right_base.image, (672,self.base_height))
+
+        
 
 
     def updateGamePlay(self):
@@ -153,6 +192,10 @@ class Game():
 
         if (pygame.time.get_ticks() - self.bird.jump_time) > 50 and abs(self.bird.y - (self.base_height - self.bird.height)) <= 5:
             self.gravity_on = False
+
+        # screen movement
+        for pipe in self.pipes:
+            pipe.x -= 10 # constant
         
         # gravity
         if self.gravity_on:
@@ -174,9 +217,9 @@ class Game():
         text = 'Play Again?'
         text_color = (255,255,255)
         button_x = center_x + (game_over_screen.width // 4)
-        button_y = center_y + 80
+        button_y = center_y + 80 # constant
 
-        self.button_rect = pygame.Rect(button_x, button_y, 100, 40)
+        self.button_rect = pygame.Rect(button_x, button_y, 100, 40) # constant
         self.color = self.hover_color if self.active else self.button_color
         pygame.draw.rect(self.window, self.color, self.button_rect, border_radius=5)
 
