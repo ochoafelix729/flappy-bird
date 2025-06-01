@@ -59,6 +59,7 @@ class Game():
         pygame.init()
         self.window = pygame.display.set_mode((self.window_w, self.window_h))
         pygame.display.set_caption('Flappy Bird')
+        self.font = pygame.font.SysFont(None, 24)
 
         # draw background
         self.background = pygame.image.load('sprites/background-day.png').convert()
@@ -78,12 +79,12 @@ class Game():
         self.collision_buffer = 0
         self.score = 0
         self.last_score_udpate_time = 0
+        self.score_color = (255,204,0)
         
 
         # for gameover screen
         self.active = False
         self.button_rect = None
-        self.font = pygame.font.SysFont(None, 24)
         self.button_color = (255,204,0)
         self.hover_color = (255,170,0)
         self.color = None
@@ -136,6 +137,7 @@ class Game():
         self.bird.y = self.bird.start_y
         self.pipes.clear()
         self.last_pipe_time = pygame.time.get_ticks()
+        self.score = 0
         
 
 
@@ -191,6 +193,28 @@ class Game():
         self.window.blit(self.base.image, (336,self.base_height))
         self.window.blit(right_base.image, (672,self.base_height))
 
+        # score
+        score_text = f'Score: {int(self.score)}'
+        text_surface = self.font.render(score_text, True, (0,0,0))
+        text_width, text_height = text_surface.get_size()
+        padding = 10
+
+        box_width = text_width + 2 * padding
+        box_height = text_height + 2 * padding
+        box_x = (self.window_w - box_width) // 2
+        box_y = self.base_height + (self.base.image.get_height() - box_height) // 2
+
+        pygame.draw.rect(self.window, self.button_color, (box_x, box_y, box_width, box_height), border_radius=8)
+        self.window.blit(text_surface, (box_x + padding, box_y + padding))
+
+        
+
+        #   to do:
+        #       draw score - in the center of the base
+        #       increase difficulty as time goes on
+        #       tweak jump physics and gravity
+        #       personal additions
+
         
 
 
@@ -227,7 +251,6 @@ class Game():
             if  (pygame.time.get_ticks() - self.last_score_udpate_time) > 390 and proximity_box.colliderect(pipe.hitbox):
                 self.score += 0.5
                 self.last_score_udpate_time = pygame.time.get_ticks()
-                print(self.score if self.score.is_integer() else '')
         
         # gravity
         if self.gravity_on:
