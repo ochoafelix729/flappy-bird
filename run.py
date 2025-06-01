@@ -10,11 +10,9 @@ class Sprite():
         self.height = self.image.get_height()
 
 
-class Bird():
+class Bird(Sprite):
     def __init__(self):
-        self.image = pygame.image.load('sprites/bluebird-upflap.png')
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
+        super().__init__('sprites/bluebird-upflap.png')
         self.x = 0
         self.y = 0
         self.start_x = None
@@ -36,11 +34,9 @@ class Bird():
             self.image = pygame.image.load('sprites/bluebird-upflap.png')
         
 
-class Pipe():
+class Pipe(Sprite):
     def __init__(self, x):
-        self.image = pygame.image.load('sprites/pipe-green.png')
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
+        super().__init__('sprites/pipe-green.png')
         self.x = x
         self.y = 0
         self.on_screen = True
