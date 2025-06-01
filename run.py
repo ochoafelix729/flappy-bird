@@ -135,6 +135,7 @@ class Game():
         self.pipes.clear()
         self.last_pipe_time = pygame.time.get_ticks()
         self.score = 0
+        self.bird.velocity = 0
         
 
 
@@ -215,16 +216,7 @@ class Game():
 
         pygame.draw.rect(self.window, self.button_color, (high_box_x, box_y, high_box_width, box_height), border_radius=8)
         self.window.blit(high_text_surface, (high_box_x + padding, box_y + padding))
-
         
-
-        
-
-        #   to do:
-        #       high score tracker
-
-        
-
 
     def updateGamePlay(self):
         keys = pygame.key.get_pressed()
