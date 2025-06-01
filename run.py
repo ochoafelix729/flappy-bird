@@ -60,6 +60,7 @@ class Game():
         self.window = pygame.display.set_mode((self.window_w, self.window_h))
         pygame.display.set_caption('Flappy Bird')
         self.font = pygame.font.SysFont(None, 24)
+        self.final_score_font = pygame.font.SysFont(None, 36)
 
         # draw background
         self.background = pygame.image.load('sprites/background-day.png').convert()
@@ -78,6 +79,7 @@ class Game():
         self.pipes = []
         self.collision_buffer = 0
         self.score = 0
+        self.highscore = 0
         self.last_score_udpate_time = 0
         self.score_color = (255,204,0)
         self.difficulty = 1
@@ -208,12 +210,22 @@ class Game():
         pygame.draw.rect(self.window, self.button_color, (box_x, box_y, box_width, box_height), border_radius=8)
         self.window.blit(text_surface, (box_x + padding, box_y + padding))
 
+        # high score
+        highscore_text = f'High Score: {int(self.highscore)}'
+        high_text_surface = self.font.render(highscore_text, True, (0,0,0))
+        high_text_width, _ = high_text_surface.get_size()
+        high_box_width =  high_text_width + 2 * padding
+        high_box_x = (self.window_w - high_box_width - 30)
+
+        pygame.draw.rect(self.window, self.button_color, (high_box_x, box_y, high_box_width, box_height), border_radius=8)
+        self.window.blit(high_text_surface, (high_box_x + padding, box_y + padding))
+
+        
+
         
 
         #   to do:
-        #       increase difficulty as time goes on
-        #       tweak jump physics and gravity
-        #       personal additions
+        #       high score tracker
 
         
 
@@ -291,6 +303,22 @@ class Game():
         text_rect = text_surface.get_rect(center=self.button_rect.center)
         self.window.blit(text_surface, text_rect)
 
+        # score display
+        score_text = f'Score: {int(self.score)}'
+        text_surface = self.final_score_font.render(score_text, True, (0,0,0))
+        text_width, text_height = text_surface.get_size()
+        padding = 15
+
+        box_width = text_width + 2 * padding
+        box_height = text_height + 2 * padding
+        box_x = (self.window_w - box_width) // 2
+        box_y = 620 # constant
+
+        pygame.draw.rect(self.window, self.button_color, (box_x, box_y, box_width, box_height), border_radius=8)
+        self.window.blit(text_surface, (box_x + padding, box_y + padding))
+
+
+
 
     def updateGameOver(self):
         hovered = self.button_rect.collidepoint(self.mouse_pos)
@@ -301,6 +329,9 @@ class Game():
         if hovered and self.mouse_click[0]:
             self.curr_screen = 'intro'
             self.restartGame()
+
+        if self.score > self.highscore:
+            self.highscore = self.score
 
 
 # start game
