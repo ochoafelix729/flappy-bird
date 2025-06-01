@@ -51,7 +51,7 @@ class Game():
 
         self.window_w = w
         self.window_h = h
-        self.gravity = 0.9 # constant
+        self.gravity = 1.4 # constant
         self.gravity_on = True
         self.curr_screen = 'intro'
         
@@ -80,6 +80,9 @@ class Game():
         self.score = 0
         self.last_score_udpate_time = 0
         self.score_color = (255,204,0)
+        self.difficulty = 1
+        self.pipe_speed = 10
+        self.pipe_interval = int(750 * (10 / self.pipe_speed)) 
         
 
         # for gameover screen
@@ -94,10 +97,6 @@ class Game():
         self.run = True
         while self.run:
             pygame.time.delay(50)
-
-            if pygame.time.get_ticks() - self.last_pipe_time > 1500:
-                self.generatePipes()
-                self.last_pipe_time = pygame.time.get_ticks()
 
             self.mouse_pos = pygame.mouse.get_pos()
             self.mouse_click = pygame.mouse.get_pressed()
@@ -142,21 +141,23 @@ class Game():
 
 
     def generatePipes(self):
-        min = 80 # constant - this will increase as game goes on
-        max = 300 # constant
         pipe_x = self.window_w
-
-        # create bottom pipe
-        bottom_pipe = Pipe(pipe_x)
-        bottom_pipe.image = pygame.image.load('sprites/pipe-green.png').convert_alpha()
-        bottom_pipe.x = pipe_x
-        bottom_pipe.y = random.randint(self.base_height - max, self.base_height - min)
 
         # create top pipe
         top_pipe = Pipe(pipe_x)
         top_pipe.image = pygame.image.load('sprites/pipe-green-down.png').convert_alpha()
         top_pipe.x = pipe_x
-        top_pipe.y = random.randint(min - top_pipe.image.get_height(), max - top_pipe.image.get_height())
+        top_pipe_min = -320
+        top_pipe_max = 0
+        top_pipe.y = random.randint(top_pipe_min, top_pipe_max)
+
+        # create bottom pipe
+        bottom_pipe = Pipe(pipe_x)
+        bottom_pipe.image = pygame.image.load('sprites/pipe-green.png').convert_alpha()
+        bottom_pipe.x = pipe_x
+        bottom_pipe_min = 368
+        bottom_pipe_max = 688
+        bottom_pipe.y = random.randint(bottom_pipe_min, bottom_pipe_max)
 
         self.pipes.append(top_pipe)
         self.pipes.append(bottom_pipe)
@@ -210,7 +211,6 @@ class Game():
         
 
         #   to do:
-        #       draw score - in the center of the base
         #       increase difficulty as time goes on
         #       tweak jump physics and gravity
         #       personal additions
@@ -228,9 +228,13 @@ class Game():
         if (pygame.time.get_ticks() - self.bird.jump_time) > 50 and abs(self.bird.y - (self.base_height - self.bird.height)) <= 5:
             self.gravity_on = False
 
+        if pygame.time.get_ticks() - self.last_pipe_time > self.pipe_interval:
+                self.generatePipes()
+                self.last_pipe_time = pygame.time.get_ticks()
+
         # screen movement
         for pipe in self.pipes:
-            pipe.x -= 10 # constant
+            pipe.x -= (self.pipe_speed + self.difficulty * 2) # constant
             if pipe.x < (-1 * pipe.width):
                 pipe.on_screen = False
                 self.pipes.remove(pipe)
@@ -251,6 +255,11 @@ class Game():
             if  (pygame.time.get_ticks() - self.last_score_udpate_time) > 390 and proximity_box.colliderect(pipe.hitbox):
                 self.score += 0.5
                 self.last_score_udpate_time = pygame.time.get_ticks()
+
+                if self.score >= 1 and self.score.is_integer() and self.score % 5 == 0:
+                    self.difficulty += 1
+                    self.pipe_speed +=2
+                    print('difficulty', self.difficulty)
         
         # gravity
         if self.gravity_on:
