@@ -136,6 +136,7 @@ class Game():
         self.last_pipe_time = pygame.time.get_ticks()
         self.score = 0
         self.bird.velocity = 0
+        self.difficulty = 0
         
 
 
