@@ -13,9 +13,6 @@ if [ ! -d "venv" ]; then
     python3 -m venv venv
 fi
 
-echo "Activating virtual environment..."
-source venv/bin/activate
-
 echo "Ensuring pip is available..."
 python -m ensurepip --upgrade
 python -m pip install --upgrade pip

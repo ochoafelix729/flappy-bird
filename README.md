@@ -7,8 +7,9 @@ chmod + x setup.sh
 ./setup.sh
 ```
 
-2. To run the program, please run this command in your terminal:
+2. To run the program, please run these commands in your terminal:
 
 ```
+source venv/bin/activate
 python3 run.py
 ```
