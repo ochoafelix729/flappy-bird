@@ -23,6 +23,7 @@ class Bird():
         self.jump_time = 0
         self.falling = True
         self.jumpforce = -12 # constant
+        self.hitbox = self.image.get_rect()
 
     def udpateFlap(self):
         if (pygame.time.get_ticks() - self.jump_time) < 500:
@@ -42,6 +43,8 @@ class Pipe():
         self.height = self.image.get_height()
         self.x = x
         self.y = 0
+        self.on_screen = True
+        self.hitbox = self.image.get_rect()
 
 class Game():
     def __init__(self, w, h):
@@ -72,6 +75,8 @@ class Game():
         self.bird.y = self.bird.start_y
         self.last_pipe_time = 0
         self.pipes = []
+        self.collision_buffer = 0
+        
 
         # for gameover screen
         self.active = False
@@ -122,11 +127,15 @@ class Game():
         self.background = pygame.image.load('sprites/background-day.png').convert()
         self.background = pygame.transform.scale(self.background, (self.window_w, self.window_h))
         self.window.blit(self.background, (0,0))
-
+        
 
     def restartGame(self):
         self.bird.x = self.bird.start_x
         self.bird.y = self.bird.start_y
+        self.pipes.clear()
+        self.last_pipe_time = pygame.time.get_ticks()
+        
+
 
     def generatePipes(self):
         min = 80 # constant - this will increase as game goes on
@@ -196,6 +205,19 @@ class Game():
         # screen movement
         for pipe in self.pipes:
             pipe.x -= 10 # constant
+            if pipe.x < (-1 * pipe.width):
+                pipe.on_screen = False
+                self.pipes.remove(pipe)
+
+        # update hitboxes
+        self.bird.hitbox = pygame.Rect(self.bird.x, self.bird.y, self.bird.width, self.bird.height)
+        for pipe in self.pipes:
+            pipe.hitbox = pygame.Rect(pipe.x, pipe.y, pipe.width, pipe.height)
+
+        # collision detection
+        for pipe in self.pipes:
+                if self.bird.hitbox.colliderect(pipe.hitbox):
+                    self.curr_screen = 'gameover'
         
         # gravity
         if self.gravity_on:
