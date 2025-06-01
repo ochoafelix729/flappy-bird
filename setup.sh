@@ -14,10 +14,10 @@ if [ ! -d "venv" ]; then
 fi
 
 echo "Ensuring pip is available..."
-python -m ensurepip --upgrade
-python -m pip install --upgrade pip
+python3 -m ensurepip --upgrade
+python3 -m pip install --upgrade pip
 
 echo "Installing dependencies..."
-python -m pip install pygame
+python3 -m pip install pygame
 
 echo "Setup complete!"
