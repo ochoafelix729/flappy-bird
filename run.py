@@ -76,6 +76,8 @@ class Game():
         self.last_pipe_time = 0
         self.pipes = []
         self.collision_buffer = 0
+        self.score = 0
+        self.last_score_udpate_time = 0
         
 
         # for gameover screen
@@ -216,8 +218,16 @@ class Game():
 
         # collision detection
         for pipe in self.pipes:
-                if self.bird.hitbox.colliderect(pipe.hitbox):
-                    self.curr_screen = 'gameover'
+            if self.bird.hitbox.colliderect(pipe.hitbox):
+                self.curr_screen = 'gameover'
+
+        # score tracker
+        proximity_box = Rect(self.bird.x, 0, self.bird.width, self.window_h)
+        for pipe in self.pipes:
+            if  (pygame.time.get_ticks() - self.last_score_udpate_time) > 390 and proximity_box.colliderect(pipe.hitbox):
+                self.score += 0.5
+                self.last_score_udpate_time = pygame.time.get_ticks()
+                print(self.score if self.score.is_integer() else '')
         
         # gravity
         if self.gravity_on:
