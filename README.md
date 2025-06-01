@@ -3,7 +3,7 @@
 1. To download all dependencies, please run these commands in your terminal:
 
 ```
-chmod + x setup.sh
+chmod +x setup.sh
 ./setup.sh
 ```
 
