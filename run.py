@@ -237,7 +237,7 @@ class Game():
             self.bird.velocity = self.bird.jumpforce
             self.bird.jump_time = pygame.time.get_ticks()
 
-        if (pygame.time.get_ticks() - self.bird.jump_time) > 50 and abs(self.bird.y - (self.base_height - self.bird.height)) <= 5:
+        if (pygame.time.get_ticks() - self.bird.jump_time) > 50 and abs(self.bird.y - (self.base_height - self.bird.height)) <= 10:
             self.gravity_on = False
 
         if pygame.time.get_ticks() - self.last_pipe_time > self.pipe_interval:
