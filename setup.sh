@@ -1,22 +1,29 @@
 #!/bin/bash
 set -e
 
-# check Python 3
+# check for Python 3
 if ! command -v python3 &> /dev/null; then
-    echo "Python3 is not installed. Install it before running this script."
+    echo "Python3 is not installed."
     exit 1
 fi
 
-# create virtual env if not exists
+# Create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."
     python3 -m venv venv
 fi
 
-echo "Upgrading pip..."
-python3 -m pip install --upgrade pip --break-system-packages
+# activate the virtual environment
+echo "Activating virtual environment..."
+source venv/bin/activate
 
-echo "Installing dependencies..."
-python3 -m pip install pygame --break-system-packages
+# upgrade pip safely inside venv
+echo "Upgrading pip inside virtual environment..."
+python -m pip install --upgrade pip
+
+# install dependencies
+echo "Installing pygame into virtual environment..."
+python -m pip install pygame
 
 echo "Setup complete!"
+
